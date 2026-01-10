@@ -1,0 +1,195 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Segoe UI", Roboto, sans-serif;
+    background: #f2f2f2;
+    color: #333;
+    margin: 0;
+    padding: 40px 0;
+}
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+#interface {
+    display: flex;
+    background-color: #fff9e5;
+    height: 420px;
+    width: 650px;
+    justify-content: space-between;
+    border-radius: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+#users {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    width: 40%;
+    padding: 15px;
+    background: linear-gradient(160deg, #f8d49d, #f6b06d);
+    color: #333;
+}
+#users h2 {
+    margin-bottom: 10px;
+    font-size: 1.3em;
+    text-transform: uppercase;
+}
+#users_menu {
+    background-color: rgba(255,255,255,0.4);
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    overflow-y: auto;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+.user_item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+.user_item:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+.content_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+.user_details {
+    margin-top: 5px;
+    display: none;
+    font-size: 0.9em;
+    color: #222;
+}
+#functions {
+    color: #fff;
+    width: 60%;
+    background: linear-gradient(145deg, #1f1f1f, #3a3a3a);
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+#functions h2 {
+    letter-spacing: 1px;
+    font-size: 1.4em;
+}
+.btn_functions {
+    height: 45px;
+    width: 220px;
+    background: #ffcc00;
+    color: #222;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.btn_functions:hover {
+    background: #ffd633;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+}
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    animation: fadeIn 0.2s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.modal_content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    min-width: 320px;
+    max-width: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    animation: slideUp 0.3s ease;
+}
+@keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.user_option {
+    background-color: #eee;
+    margin: 6px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.user_option:hover {
+    background-color: #ddd;
+    transform: scale(1.03);
+}
+.modal_content input {
+    width: 80%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.modal_content button {
+    background: #ffcc00;
+    border: none;
+    padding: 10px 16px;
+    margin-top: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modal_content button:hover {
+    background: #ffd633;
+}
+
+#users_menu::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  #users_menu::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05); 
+    border-radius: 10px;
+  }
+  
+
+  #users_menu::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #fae38b, #ffe169);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+  
+
+  #users_menu::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ffd633, #ffcc00);
+  }
+  
+
+  html {
+    scroll-behavior: smooth;
+  }
