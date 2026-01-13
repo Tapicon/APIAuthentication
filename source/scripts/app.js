@@ -1,16 +1,20 @@
 
 import express from "express"
 import jwt from "jsonwebtoken"
+import pool from "./db.js"
 
 const app = express(); // Express app instance's -> The server
 const port = 3000;
 const SECRET = "minha_chave_secreta_super_segura" 
+
 //middleweres
 app.use((req, res, next) => {
     console.log(`Nova requisição: ${req.method} ${req.url} às ${new Date().toLocaleTimeString()}`);
     next()
 });
 app.use(express.json());
+
+
 app.post('/login', (req, res) => {
     const {username, password} = req.body
     if (username === 'Luz Viviana' && password === '12345'){
