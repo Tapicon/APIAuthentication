@@ -14,13 +14,26 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
+app.post("/register", async (req, res) => {
+    const {username, password} = req.body;
+    try{
+        await pool.query("INSERT INTO usuarios (username, password) VALUES ($1, $2)", [username, password]);
+        res.status(201).json({message: "Usuário cadastrado"});
+    } catch(err){
+        console.log(err)
+        res.status(500).json({message: "Erro ao cadastrar"})
+    }
+})
 
 app.post('/login', (req, res) => {
     const {username, password} = req.body
-    if (username === 'Luz Viviana' && password === '12345'){
-        const token = jwt.sign({ username }, SECRET, { expiresIn: "1h" });
-        return res.json({ token });
-    }
+
+    const result = pool.query("SELECT * FROM usuarios WHERE username = $1 AND password = $2", [username,password]);
+    
+    // if (username === 'Luz Viviana' && password === '12345'){
+    //     const token = jwt.sign({ username }, SECRET, { expiresIn: "1h" });
+    //     return res.json({ token });
+    // }
     res.status(401).json({ message: "Credenciais inválidas" });
 })
 
