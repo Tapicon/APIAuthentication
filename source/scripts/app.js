@@ -25,16 +25,20 @@ app.post("/register", async (req, res) => {
     }
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const {username, password} = req.body
 
-    const result = pool.query("SELECT * FROM usuarios WHERE username = $1 AND password = $2", [username,password]);
-    
+    const result = await pool.query("SELECT * FROM usuarios WHERE username = $1 AND password = $2", [username,password]);
+    if(result.rows.lenght > 0){
+        const token = jwt.sign({username},SECRET, {expiresIn:"1h"});
+        res.json({token});
+    } else{
+        res.status(401).json({message: "credenciais invalidas"});
+    }
     // if (username === 'Luz Viviana' && password === '12345'){
     //     const token = jwt.sign({ username }, SECRET, { expiresIn: "1h" });
     //     return res.json({ token });
     // }
-    res.status(401).json({ message: "Credenciais inválidas" });
 })
 
 function autenticarToken(req, res, next){
