@@ -2,10 +2,12 @@
 import express from "express"
 import jwt from "jsonwebtoken"
 import pool from "./db.js"
+import dotenv from "dotenv"
+import bcrypt from "bcrypt"
 
 const app = express(); // Express app instance's -> The server
 const port = 3000;
-const SECRET = "minha_chave_secreta_super_segura" 
+const SECRET = process.env.JWS_SECRET
 
 //middleweres
 app.use((req, res, next) => {
@@ -17,7 +19,8 @@ app.use(express.json());
 app.post("/register", async (req, res) => {
     const {username, password} = req.body;
     try{
-        await pool.query("INSERT INTO usuarios (username, password) VALUES ($1, $2)", [username, password]);
+        const hashedPassword = await bcrypt.hash(password, 10)
+        await pool.query("INSERT INTO usuarios (username, password) VALUES ($1, $2)", [username, hashedPassword]);
         res.status(201).json({message: "Usuário cadastrado"});
     } catch(err){
         console.log(err)
@@ -26,19 +29,29 @@ app.post("/register", async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-    const {username, password} = req.body
+    try{
+        const {username, password} = req.body
 
-    const result = await pool.query("SELECT * FROM usuarios WHERE username = $1 AND password = $2", [username,password]);
-    if(result.rows.lenght > 0){
+        const result = await pool.query("SELECT * FROM usuarios WHERE username = $1", [username]);
+        if (result.rows.length === 0){
+            return res.status(401).json({message: "Usuario nao encontrado"})
+        }
+        const user = result.rows[0]
+    
+        const senhaCorreta = await bcrypt.compare(password, user.password)
+    
+        if(!senhaCorreta){
+            return res.status(401).json({message:"senha incorreta"})
+        }
         const token = jwt.sign({username},SECRET, {expiresIn:"1h"});
         res.json({token});
-    } else{
-        res.status(401).json({message: "credenciais invalidas"});
-    }
-    // if (username === 'Luz Viviana' && password === '12345'){
-    //     const token = jwt.sign({ username }, SECRET, { expiresIn: "1h" });
-    //     return res.json({ token });
-    // }
+        // if (username === 'Luz Viviana' && password === '12345'){
+        //     const token = jwt.sign({ username }, SECRET, { expiresIn: "1h" });
+        //     return res.json({ token });
+        // }
+        } catch(err){
+            console.log(err)
+        }
 })
 
 function autenticarToken(req, res, next){
