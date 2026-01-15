@@ -2,7 +2,6 @@
 import express from "express"
 import jwt from "jsonwebtoken"
 import pool from "./db.js"
-import dotenv from "dotenv"
 import bcrypt from "bcrypt"
 
 const app = express(); // Express app instance's -> The server
@@ -72,3 +71,5 @@ app.get('/dashboard', autenticarToken, (req, res) =>{
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
+
+export default app
