@@ -3,7 +3,7 @@ import express from "express"
 import jwt from "jsonwebtoken"
 import pool from "./db.js"
 import bcrypt from "bcrypt"
-
+import cors from "cors"
 const app = express(); // Express app instance's -> The server
 const port = 3000;
 const SECRET = process.env.JWS_SECRET
@@ -14,6 +14,17 @@ app.use((req, res, next) => {
     next()
 });
 app.use(express.json());
+app.use(cors())
+
+app.get("/usuarios", async (req, res) =>{
+    try{
+        const result = await pool.query("SELECT username FROM usuarios ORDER BY id ASC");
+        res.json(result.rows);
+    } catch(err){
+        console.error(err)
+        res.status(500).json({message: "Erro de requisição usuários"})
+    }
+})
 
 app.post("/register", async (req, res) => {
     const {username, password} = req.body;
@@ -53,6 +64,25 @@ app.post('/login', async (req, res) => {
         }
 })
 
+app.put("/updateUser", autenticarToken, async(req,res) => {
+    const { newUsername, newPassword } = req.body
+    const { username } = req.user;
+
+    try{
+        let hashedPassword = null
+        if(newPassword){
+            hashedPassword = await bcrypt.hash(newPassword, 10);
+        }
+        console.log(newUsername)
+        if (newUsername && newPassword){
+            await pool.query("UPDATE usuarios SET username = $1, password = $2 WHERE username = $3",[newUsername, hashedPassword, username])
+            res.status(200).json({message:"deu bom"})
+        }
+        
+    } catch(err){
+        res.status(401).json({message:"erro de update"})
+    }
+})
 function autenticarToken(req, res, next){
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(" ")[1]; // Pega o token após "Bearer"
