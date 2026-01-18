@@ -36,16 +36,22 @@ function UserList() {
   const updateUser = async () => {
     if (!editingUser.username || !editingUser.password) return alert("Preencha todos os campos!");
     try{
-      await axios.post(`${API_URL}/login`, {
+       const loginResponse = await axios.post(`${API_URL}/login`, {
         username: editingUser.username,
         password: editingUser.password,
       });
-      await axios.put(`${API_URL}/usuarios/${editingUser.original}`, {
-        username: editingUser.username,
-        password: editingUser.password,
-      });
+      const token = loginResponse.data.token
+      alert(token)
+      if (token){
+        await axios.put(`${API_URL}/updateUser`, 
+          { newUsername: editingUser.username, newPassword: editingUser.password }, 
+          { headers: { Authorization: `Bearer ${token}`}})
+      }else{
+        return alert("porra")
+      }
       setEditingUser(null);
     } catch(err){
+      console.error(err)
       return alert("Preencha os campos direito otario!")
     };
     fetchUsers();
@@ -85,6 +91,11 @@ function UserList() {
               <input
                 value={editingUser.username}
                 onChange={(e) => setEditingUser({ ...editingUser, username: e.target.value })}
+              />
+              <input
+                value={(editingUser.password)}
+                onChange= {(e) => setEditingUser({ ...
+                editingUser, password: e.target.value })}
               />
               <button onClick={updateUser}>Salvar</button>
               <button onClick={() => setEditingUser(null)}>Cancelar</button>

@@ -41,7 +41,6 @@ app.post("/register", async (req, res) => {
 app.post('/login', async (req, res) => {
     try{
         const {username, password} = req.body
-
         const result = await pool.query("SELECT * FROM usuarios WHERE username = $1", [username]);
         if (result.rows.length === 0){
             return res.status(401).json({message: "Usuario nao encontrado"})
